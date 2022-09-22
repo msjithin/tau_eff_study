@@ -76,9 +76,9 @@ for idx in mzp_map:
 		raw_name = ''
 		
 		if idtype == 'boosted':
-			raw_name = var+'_boostedraw_'+selection
+			raw_name = var+'_boostedraw_'+'6'
 		else:
-			raw_name = var+'_raw_'+selection
+			raw_name = var+'_raw_'+'6'
 
 		# print raw_name
 		hist_raw = infile.Get(raw_name)
