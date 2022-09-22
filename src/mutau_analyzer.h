@@ -213,6 +213,7 @@ public:
   bool found_ZprimeBaryonic;
 
   TLorentzVector gentau1, gentau2, genhiggs;
+  int gentau1_index, gentau2_index;
 
   // Declaration of leaf types
   vector<double> *signalParameters;
@@ -1380,6 +1381,7 @@ void mutau_analyzer::Init(TChain *tree, string _isMC_, string sampleName)
   my_njets = my_njets_nom_5 = my_njets_nom_9 = my_njets_nom_5dyll = my_njets_nom_9dyll = 0;
   signalParameters = 0;
 
+  gentau1_index = gentau2_index = -1;
   make_iso_plot = false;
    plot_boosted  = false;
   phoE = 0;

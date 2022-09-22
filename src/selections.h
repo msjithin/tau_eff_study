@@ -51,10 +51,12 @@ void mutau_analyzer::selections(float weight, int shift, string uncObject)
 	for(int i=0; i<nMC; i++){
 		if(abs(mcMotherPID->at(i))==pdgid_tocheck && mcPID->at(i)==15  )
 		{
+			gentau1_index = i;
 			gentau1.SetPtEtaPhiE(mcPt->at(i) , mcEta->at(i) , mcPhi->at(i)  , mcE->at(i));
 		}
 		if(abs(mcMotherPID->at(i))==pdgid_tocheck && mcPID->at(i)==-15  )
 		{
+			gentau2_index = i;
 			gentau2.SetPtEtaPhiE(mcPt->at(i) , mcEta->at(i) , mcPhi->at(i)  , mcE->at(i));
 		}
 	}
@@ -63,8 +65,6 @@ void mutau_analyzer::selections(float weight, int shift, string uncObject)
 	// cout<<"P4 sum  "<< genhiggs.Pt() << " " << genhiggs.Eta() << " " << genhiggs.Phi() <<" " << genhiggs.E() <<endl;
 	// cout<< "muon size "<< genmucand.size() <<" tau size "<< gentaucand.size() <<endl;
 	// cout<< endl;
-	muCand = simple_mu_cand(20, 2.4, 0); ///// ele selected
-	tauCand = simple_tau_cand(30.0, 2.3, 0);
 	metP4.SetPtEtaPhiE(pfMET, 0, pfMETPhi, pfMET);
 
 	plot_boosted = false;
@@ -121,7 +121,7 @@ void mutau_analyzer::selections(float weight, int shift, string uncObject)
 				bool pass_bjet_veto = ((bJet_medium(MuIndex, TauIndex).size() == 0) && (bJet_loose(MuIndex, TauIndex).size() < 2));
 				if (pass_bjet_veto)
 				{
-				  if(my_muP4.DeltaR(my_tauP4) > 0.5)
+				  //if(my_muP4.DeltaR(my_tauP4) > 0.5)
 				    {
 					// cout<<__LINE__<<endl;
 					plot_resolved_taus(my_muP4, my_tauP4, TauIndex, "6", event_weight);
@@ -186,7 +186,7 @@ void mutau_analyzer::selections(float weight, int shift, string uncObject)
 				bool pass_bjet_veto = ((bJet_medium_boosted(MuIndex, TauIndex).size() == 0) && (bJet_loose_boosted(MuIndex, TauIndex).size() < 2));
 				if (pass_bjet_veto)
 				{
-				  if(deltaR < 0.5)
+				  //if(deltaR < 0.5)
 				    {
 					// cout << __LINE__ << endl;
 					plot_boosted_taus(my_muP4, my_tauP4, TauIndex, "6", event_weight);
@@ -467,9 +467,9 @@ pair<int, int> mutau_analyzer::get_index()
         bool pass3rdLeptonVeto = (passDiMuonVeto(iMu) == true && eVetoZTTp001dxyz(iMu, iTau) && mVetoZTTp001dxyz(iMu, iTau));
         
         double dr_aa = mu_p4.DeltaR(gentau1);
-			  double dr_ab = mu_p4.DeltaR(gentau2);
-			  double dr_ba = tau_p4.DeltaR(gentau1);
-			  double dr_bb = tau_p4.DeltaR(gentau2);
+		double dr_ab = mu_p4.DeltaR(gentau2);
+		double dr_ba = tau_p4.DeltaR(gentau1);
+		double dr_bb = tau_p4.DeltaR(gentau2);
 
 
         if (  muPt->at(iMu) > 20 
@@ -490,7 +490,7 @@ pair<int, int> mutau_analyzer::get_index()
             && (TriggerSelection(mu_p4, tau_p4) == true )
             //  && (thirdLeptonVeto(iMu, iTau))
             //  && (pass_bjet_veto)
-            && (mu_tau_dr > 0.5)
+            // && (mu_tau_dr > 0.5)
             && ( dr_aa < 0.1 ||  dr_ab < 0.1 ||  dr_ba < 0.1 ||  dr_bb < 0.1)
         )
         {
@@ -525,9 +525,9 @@ pair<int, int> mutau_analyzer::get_index_2()
         double higgspt = (mu_p4 + tau_p4).Pt();
 
         double dr_aa = mu_p4.DeltaR(gentau1);
-			  double dr_ab = mu_p4.DeltaR(gentau2);
-			  double dr_ba = tau_p4.DeltaR(gentau1);
-			  double dr_bb = tau_p4.DeltaR(gentau2);
+		double dr_ab = mu_p4.DeltaR(gentau2);
+		double dr_ba = tau_p4.DeltaR(gentau1);
+		double dr_bb = tau_p4.DeltaR(gentau2);
 
         if ( muPt->at(iMu) > 20 
 			&& fabs(muEta->at(iMu)) < 2.4
@@ -542,7 +542,7 @@ pair<int, int> mutau_analyzer::get_index_2()
             && boostedTaupfTausDiscriminationByDecayModeFindingNewDMs->at(iTau) > 0.5
             && boostedTauByMVA6LooseElectronRejection->at(iTau) > 0.5
             && boostedTauByTightMuonRejection3->at(iTau) > 0.5
-            && mu_tau_dr < 0.5 
+            // && mu_tau_dr < 0.5 
             && ( dr_aa < 0.1 ||  dr_ab < 0.1 ||  dr_ba < 0.1 ||  dr_bb < 0.1)
         )
         {
