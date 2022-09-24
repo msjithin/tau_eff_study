@@ -53,6 +53,17 @@ void tautau_analyzer::selections(float weight, int shift, string uncObject)
 		}
 	}
 
+	double gentauPt = max( gentau1.Pt(), gentau2.Pt() );
+	double gensubleadingtauPt = min( gentau1.Pt(), gentau2.Pt() );
+	double gentau_deltaR = gentau1.DeltaR(gentau2);
+	double gentau_higgsPt = (gentau1 + gentau2).Pt();
+	if( gentau1.Pt()>40 && gentau2.Pt()>40  && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
+	{
+		plotFill("gentauPt_raw_0", gentauPt, 970, 30, 1000, event_weight);
+		plotFill("gensubleadingtauPt_raw_0", gensubleadingtauPt, 970, 30, 1000, event_weight);
+		plotFill("genHiggsPt_raw_0", gentau_higgsPt, 970, 30, 1000, event_weight);
+		plotFill("gendeltaR_raw_0", gentau_deltaR, 600, 0, 6, event_weight);
+	}
 	// Setting nominal values
 	// index_tau1 = getTau1Cand(40.0, 2.1, 0);
 	// index_tau2 = getTau2Cand(40.0, 2.1, index_tau1, 0);
@@ -72,6 +83,13 @@ void tautau_analyzer::selections(float weight, int shift, string uncObject)
 		index_tau2 = selected_indices.second;
 		if (index_tau1 >= 0 && index_tau2 >= 0)
 		{
+			if( gentau1.Pt()>40 && gentau2.Pt()>40  && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
+			{
+				plotFill("gentauPt_raw_1", gentauPt, 970, 30, 1000, event_weight);
+				plotFill("gensubleadingtauPt_raw_1", gensubleadingtauPt, 970, 30, 1000, event_weight);
+				plotFill("genHiggsPt_raw_1", gentau_higgsPt, 970, 30, 1000, event_weight);
+				plotFill("gendeltaR_raw_1", gentau_deltaR, 600, 0, 6, event_weight);
+			}
 			nevents4++;
 			nGoodTauPassed += event_weight;
 			//setMyEleTau(index_tau1, index_tau2, metP4, shift);
@@ -84,7 +102,7 @@ void tautau_analyzer::selections(float weight, int shift, string uncObject)
 			if (thirdLeptonVeto(Tau1Index, Tau2Index))
 			{
 				plot_resolved_taus(my_tau1P4, my_tau2P4, Tau1Index, "5", event_weight);
-				if( my_tau1P4.DeltaR(my_tau2P4) > 0.5)
+				// if( my_tau1P4.DeltaR(my_tau2P4) > 0.5)
 				{
 					plot_resolved_taus(my_tau1P4, my_tau2P4, Tau1Index, "6", event_weight);
 
@@ -131,7 +149,13 @@ void tautau_analyzer::selections(float weight, int shift, string uncObject)
 
 			nevents4++;
 			nGoodTauPassed += event_weight;
-
+			if( gentau1.Pt()>40 && gentau2.Pt()>40  && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
+			{
+				plotFill("gentauPt_boostedraw_1", gentauPt, 970, 30, 1000, event_weight);
+				plotFill("gensubleadingtauPt_boostedraw_1", gensubleadingtauPt, 970, 30, 1000, event_weight);
+				plotFill("genHiggsPt_boostedraw_1", gentau_higgsPt, 970, 30, 1000, event_weight);
+				plotFill("gendeltaR_boostedraw_1", gentau_deltaR, 600, 0, 6, event_weight);
+			}
 			// setMyEleTau(index_tau1, index_tau2, metP4, shift);
 			Tau1Index = index_tau1;
 			Tau2Index = index_tau2;
@@ -144,7 +168,7 @@ void tautau_analyzer::selections(float weight, int shift, string uncObject)
 			{
 				// cout << __LINE__ << endl;
 				plot_boosted_taus(my_tau1P4, my_tau2P4, Tau1Index, "5", event_weight);
-				if( my_tau1P4.DeltaR(my_tau2P4) < 0.5)
+				// if( my_tau1P4.DeltaR(my_tau2P4) < 0.5)
 				{
 					plot_boosted_taus(my_tau1P4, my_tau2P4, Tau1Index, "6", event_weight);
 
@@ -178,6 +202,15 @@ void tautau_analyzer::selections(float weight, int shift, string uncObject)
 
 void tautau_analyzer::plot_resolved_taus(TLorentzVector muP4, TLorentzVector tauP4, int tauindex, string hnumber, double event_weight)
 {
+
+	double gentauPt = max( gentau1.Pt(), gentau2.Pt() );
+	double gensubleadingtauPt = min( gentau1.Pt(), gentau2.Pt() );
+	double gentau_deltaR = gentau1.DeltaR(gentau2);
+	double gentau_higgsPt = (gentau1 + gentau2).Pt();
+	plotFill("gentauPt_raw_"+hnumber, gentauPt, 970, 30, 1000, event_weight);
+	plotFill("gensubleadingtauPt_raw_"+hnumber, gensubleadingtauPt, 970, 30, 1000, event_weight);
+	plotFill("genHiggsPt_raw_"+hnumber, gentau_higgsPt, 970, 30, 1000, event_weight);
+	plotFill("gendeltaR_raw_"+hnumber, gentau_deltaR, 600, 0, 6, event_weight);
 
 	double tauPt = muP4.Pt();
 	double subleadingtauPt = tauP4.Pt();
@@ -352,6 +385,16 @@ void tautau_analyzer::plot_resolved_taus(TLorentzVector muP4, TLorentzVector tau
 
 void tautau_analyzer::plot_boosted_taus(TLorentzVector muP4, TLorentzVector tauP4, int tauindex, string hnumber, double event_weight)
 {
+
+	double gentauPt = max( gentau1.Pt(), gentau2.Pt() );
+	double gensubleadingtauPt = min( gentau1.Pt(), gentau2.Pt() );
+	double gentau_deltaR = gentau1.DeltaR(gentau2);
+	double gentau_higgsPt = (gentau1 + gentau2).Pt();
+	plotFill("gentauPt_raw_"+hnumber, gentauPt, 970, 30, 1000, event_weight);
+	plotFill("gensubleadingtauPt_raw_"+hnumber, gensubleadingtauPt, 970, 30, 1000, event_weight);
+	plotFill("genHiggsPt_raw_"+hnumber, gentau_higgsPt, 970, 30, 1000, event_weight);
+	plotFill("gendeltaR_raw_"+hnumber, gentau_deltaR, 600, 0, 6, event_weight);
+
 	double tauPt = muP4.Pt();
 	double subleadingtauPt = tauP4.Pt();
 	double deltaR = muP4.DeltaR(tauP4);
@@ -437,7 +480,9 @@ pair<int, int> tautau_analyzer::get_index()
 			  double dr_bb = tau2_p4.DeltaR(gentau2);
 
         bool pass3rdLeptonVeto = ( eVetoZTTp001dxyz(iTau1, iTau2) && mVetoZTTp001dxyz(iTau1, iTau2) );
-        if (  tau_Charge->at(iTau1) * tau_Charge->at(iTau2) < 0 
+        if (   tau1_p4.Pt() > 40 && tau2_p4.Pt() > 40
+				&& abs(tau1_p4.Eta()) < 2.3 && abs(tau2_p4.Eta()) < 2.3
+				&& tau_Charge->at(iTau1) * tau_Charge->at(iTau2) < 0 
             // && tau_byMediumDeepTau2017v2p1VSjet->at(iTau1) == 1
             // && tau_byMediumDeepTau2017v2p1VSjet->at(iTau2) == 1
             && tau_DecayMode->at(iTau1) >= 0
@@ -449,7 +494,7 @@ pair<int, int> tautau_analyzer::get_index()
             // && (TriggerSelection(tau1_p4, tau2_p4) == true )
 		        // && (thirdLeptonVeto(iTau1, iTau2))
             && ( dr_aa < 0.1 ||  dr_ab < 0.1 ||  dr_ba < 0.1 ||  dr_bb < 0.1)
-            && (tau_tau_dr > 0.5)
+            // && (tau_tau_dr > 0.5)
         )
         {
           return make_pair(iTau1, iTau2);
@@ -491,14 +536,16 @@ pair<int, int> tautau_analyzer::get_index_2()
 			  double dr_bb = tau2_p4.DeltaR(gentau2);
 
         //bool pass3rdLeptonVeto = ( eVetoZTTp001dxyz(iTau1, iTau2) && mVetoZTTp001dxyz(iTau1, iTau2) );
-        if (  boostedTauCharge->at(iTau1) * boostedTauCharge->at(iTau2) < 0 
+        if ( tau1_p4.Pt() > 40 && tau2_p4.Pt() > 40
+				&& abs(tau1_p4.Eta()) < 2.3 && abs(tau2_p4.Eta()) < 2.3  
+				&& boostedTauCharge->at(iTau1) * boostedTauCharge->at(iTau2) < 0 
               && boostedTaupfTausDiscriminationByDecayModeFindingNewDMs->at(iTau1) > 0.5
               && boostedTaupfTausDiscriminationByDecayModeFindingNewDMs->at(iTau2) > 0.5
               && boostedTauByLooseMuonRejection3->at(iTau1) > 0.5
               && boostedTauByLooseMuonRejection3->at(iTau2) > 0.5
               && boostedTauDecayMode->at(iTau1) >= 0
               && boostedTauDecayMode->at(iTau2) >= 0
-              && tau_tau_dr < 0.5 
+              // && tau_tau_dr < 0.5 
               && ( dr_aa < 0.1 ||  dr_ab < 0.1 ||  dr_ba < 0.1 ||  dr_bb < 0.1)
             )
         {
