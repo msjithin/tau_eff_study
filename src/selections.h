@@ -479,12 +479,12 @@ void mutau_analyzer::make_plot(string idtype, string hnumber, TLorentzVector muP
 
 	double genmuPt = 0.0; 
 	double gentauPt = 0.0; 
-	if ( muP4.DeltaR(gentau1)<0.1 && tauP4.DeltR(gentau2)<0.1 )
+	if ( muP4.DeltaR(gentau1)<0.1 && tauP4.DeltaR(gentau2)<0.1 )
 	{
 		genmuPt = gentau1.Pt();
 		gentauPt = gentau2.Pt();
 	}
-	else if( muP4.DeltaR(gentau2)<0.1 && tauP4.DeltR(gentau1)<0.1 )
+	else if( muP4.DeltaR(gentau2)<0.1 && tauP4.DeltaR(gentau1)<0.1 )
 	{
 		genmuPt = gentau2.Pt();
 		gentauPt = gentau1.Pt();
