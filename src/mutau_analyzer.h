@@ -1221,6 +1221,7 @@ public:
 
   void plot_resolved_taus(TLorentzVector muP4, TLorentzVector tauP4, int tauindex, string hnumber, double event_weight);
   void plot_boosted_taus(TLorentzVector muP4, TLorentzVector tauP4, int tauindex, string hnumber, double event_weight);
+  void make_plot(string idtype, string hnumber, TLorentzVector tau1P4, TLorentzVector tau2P4, int tauindex, double event_weight);
 
 };
 
