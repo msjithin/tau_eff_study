@@ -83,13 +83,14 @@ void tautau_analyzer::selections(float weight, int shift, string uncObject)
 		index_tau2 = selected_indices.second;
 		if (index_tau1 >= 0 && index_tau2 >= 0)
 		{
-			if( gentau1.Pt()>40 && gentau2.Pt()>40  && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
-			{
-				plotFill("gentauPt_raw_1", gentauPt, 970, 30, 1000, event_weight);
-				plotFill("gensubleadingtauPt_raw_1", gensubleadingtauPt, 970, 30, 1000, event_weight);
-				plotFill("genHiggsPt_raw_1", gentau_higgsPt, 970, 30, 1000, event_weight);
-				plotFill("gendeltaR_raw_1", gentau_deltaR, 600, 0, 6, event_weight);
-			}
+			if( gentau1.Pt()>40 && gentau2.Pt()>40 && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
+				{
+			
+			plotFill("gentauPt_raw_1", gentauPt, 970, 30, 1000, event_weight);
+			plotFill("gensubleadingtauPt_raw_1", gensubleadingtauPt, 970, 30, 1000, event_weight);
+			plotFill("genHiggsPt_raw_1", gentau_higgsPt, 970, 30, 1000, event_weight);
+			plotFill("gendeltaR_raw_1", gentau_deltaR, 600, 0, 6, event_weight);
+			
 			nevents4++;
 			nGoodTauPassed += event_weight;
 			//setMyEleTau(index_tau1, index_tau2, metP4, shift);
@@ -99,6 +100,7 @@ void tautau_analyzer::selections(float weight, int shift, string uncObject)
   			my_tau2P4.SetPtEtaPhiE(tau_Pt->at(Tau2Index),tau_Eta->at(Tau2Index) ,tau_Phi->at(Tau2Index), tau_Energy->at(Tau2Index));
 			my_metP4.SetPtEtaPhiE(pfMET ,0,pfMETPhi,pfMET); 
 			// third lepton veto
+			plot_resolved_taus(my_tau1P4, my_tau2P4, Tau1Index, "4", event_weight);         
 			if (thirdLeptonVeto(Tau1Index, Tau2Index))
 			{
 				plot_resolved_taus(my_tau1P4, my_tau2P4, Tau1Index, "5", event_weight);
@@ -128,7 +130,7 @@ void tautau_analyzer::selections(float weight, int shift, string uncObject)
 			}
 		}
 	}
-	
+	}
 	
 	//// cout << __LINE__ << endl;
 	// tauCand.clear();
@@ -149,13 +151,14 @@ void tautau_analyzer::selections(float weight, int shift, string uncObject)
 
 			nevents4++;
 			nGoodTauPassed += event_weight;
-			if( gentau1.Pt()>40 && gentau2.Pt()>40  && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
+			if( gentau1.Pt()>40 && gentau2.Pt()>40 && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
 			{
-				plotFill("gentauPt_boostedraw_1", gentauPt, 970, 30, 1000, event_weight);
-				plotFill("gensubleadingtauPt_boostedraw_1", gensubleadingtauPt, 970, 30, 1000, event_weight);
-				plotFill("genHiggsPt_boostedraw_1", gentau_higgsPt, 970, 30, 1000, event_weight);
-				plotFill("gendeltaR_boostedraw_1", gentau_deltaR, 600, 0, 6, event_weight);
-			}
+
+			plotFill("gentauPt_boostedraw_1", gentauPt, 970, 30, 1000, event_weight);
+			plotFill("gensubleadingtauPt_boostedraw_1", gensubleadingtauPt, 970, 30, 1000, event_weight);
+			plotFill("genHiggsPt_boostedraw_1", gentau_higgsPt, 970, 30, 1000, event_weight);
+			plotFill("gendeltaR_boostedraw_1", gentau_deltaR, 600, 0, 6, event_weight);
+			
 			// setMyEleTau(index_tau1, index_tau2, metP4, shift);
 			Tau1Index = index_tau1;
 			Tau2Index = index_tau2;
@@ -164,9 +167,10 @@ void tautau_analyzer::selections(float weight, int shift, string uncObject)
 			my_tau1P4.SetPtEtaPhiE(boostedTauPt->at(index_tau1), boostedTauEta->at(index_tau1), boostedTauPhi->at(index_tau1), boostedTauEnergy->at(index_tau1));
 			my_tau2P4.SetPtEtaPhiE(boostedTauPt->at(index_tau2), boostedTauEta->at(index_tau2), boostedTauPhi->at(index_tau2), boostedTauEnergy->at(index_tau2));
 			my_metP4.SetPtEtaPhiE(pfMET ,0,pfMETPhi,pfMET); 
+			plot_boosted_taus(my_tau1P4, my_tau2P4, Tau1Index, "4", event_weight);                   
 			if (thirdLeptonVeto_boosted(Tau1Index, Tau2Index))
 			{
-				// cout << __LINE__ << endl;
+			  // cout << __LINE__ << endl;
 				plot_boosted_taus(my_tau1P4, my_tau2P4, Tau1Index, "5", event_weight);
 				// if( my_tau1P4.DeltaR(my_tau2P4) < 0.5)
 				{
@@ -196,256 +200,134 @@ void tautau_analyzer::selections(float weight, int shift, string uncObject)
 					}
 				}
 			}
+			}
 		}
 	}
 }
 
-void tautau_analyzer::plot_resolved_taus(TLorentzVector muP4, TLorentzVector tauP4, int tauindex, string hnumber, double event_weight)
+void tautau_analyzer::plot_resolved_taus(TLorentzVector tau1P4, TLorentzVector tau2P4, int tauindex, string hnumber, double event_weight)
 {
 
-	double gentauPt = max( gentau1.Pt(), gentau2.Pt() );
-	double gensubleadingtauPt = min( gentau1.Pt(), gentau2.Pt() );
-	double gentau_deltaR = gentau1.DeltaR(gentau2);
-	double gentau_higgsPt = (gentau1 + gentau2).Pt();
-	plotFill("gentauPt_raw_"+hnumber, gentauPt, 970, 30, 1000, event_weight);
-	plotFill("gensubleadingtauPt_raw_"+hnumber, gensubleadingtauPt, 970, 30, 1000, event_weight);
-	plotFill("genHiggsPt_raw_"+hnumber, gentau_higgsPt, 970, 30, 1000, event_weight);
-	plotFill("gendeltaR_raw_"+hnumber, gentau_deltaR, 600, 0, 6, event_weight);
+	make_plot("raw", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 
-	double tauPt = muP4.Pt();
-	double subleadingtauPt = tauP4.Pt();
-	double deltaR = muP4.DeltaR(tauP4);
-	double higgsPt = (muP4 + tauP4).Pt();
-	plotFill("tauPt_raw_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-	plotFill("subleadingtauPt_raw_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-	plotFill("HiggsPt_raw_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
-	plotFill("deltaR_raw_" + hnumber, deltaR, 600, 0, 6, event_weight);
 	if (tau_byVVVLooseDeepTau2017v2p1VSjet->at(tauindex) == 1)
 	{
-		plotFill("tauPt_deepVVVLoose_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_deepVVVLoose_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_deepVVVLoose_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_deepVVVLoose_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
-
+		make_plot("deepVVVLoose", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_byVVLooseDeepTau2017v2p1VSjet->at(tauindex) == 1)
 	{
-		plotFill("tauPt_deepVVLoose_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_deepVVLoose_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_deepVVLoose_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_deepVVLoose_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
-
+		make_plot("deepVVLoose", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_byVLooseDeepTau2017v2p1VSjet->at(tauindex) == 1)
 	{
-		plotFill("tauPt_deepVLoose_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_deepVLoose_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_deepVLoose_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_deepVLoose_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("deepVLoose", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_byLooseDeepTau2017v2p1VSjet->at(tauindex) == 1)
 	{
-		plotFill("tauPt_deepLoose_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_deepLoose_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_deepLoose_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_deepLoose_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("deepLoose", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_byMediumDeepTau2017v2p1VSjet->at(tauindex) == 1)
 	{
-		plotFill("tauPt_deepMedium_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_deepMedium_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_deepMedium_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_deepMedium_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("deepMedium", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_byTightDeepTau2017v2p1VSjet->at(tauindex) == 1)
 	{
-		plotFill("tauPt_deepTight_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_deepTight_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_deepTight_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_deepTight_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("deepTight", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_byVTightDeepTau2017v2p1VSjet->at(tauindex) == 1)
 	{
-		plotFill("tauPt_deepVTight_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_deepVTight_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_deepVTight_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_deepVTight_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("deepVTight", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_byVVTightDeepTau2017v2p1VSjet->at(tauindex) == 1)
 	{
-		plotFill("tauPt_deepVVTight_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_deepVVTight_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_deepVVTight_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_deepVVTight_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("deepVVTight", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 
 	if (tau_IDbits->at(tauindex) >> 12 & 1 == 1)
 	{
-		plotFill("tauPt_2017VVLoose_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2017VVLoose_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2017VVLoose_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2017VVLoose_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("2017VVLoose", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_IDbits->at(tauindex) >> 13 & 1 == 1)
 	{
-		plotFill("tauPt_2017VLoose_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2017VLoose_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2017VLoose_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2017VLoose_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("2017VLoose", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_IDbits->at(tauindex) >> 14 & 1 == 1)
 	{
-		plotFill("tauPt_2017Loose_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2017Loose_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2017Loose_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2017Loose_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("2017Loose", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_IDbits->at(tauindex) >> 15 & 1 == 1)
 	{
-		plotFill("tauPt_2017Medium_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2017Medium_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2017Medium_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2017Medium_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("2017Medium", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_IDbits->at(tauindex) >> 16 & 1 == 1)
 	{
-		plotFill("tauPt_2017Tight_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2017Tight_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2017Tight_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2017Tight_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("2017Tight", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_IDbits->at(tauindex) >> 17 & 1 == 1)
 	{
-		plotFill("tauPt_2017VTight_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2017VTight_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2017VTight_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2017VTight_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("2017VTight", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_IDbits->at(tauindex) >> 18 & 1 == 1)
 	{
-		plotFill("tauPt_2017VVTight_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2017VVTight_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2017VVTight_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2017VVTight_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("2017VVTight", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_IDbits->at(tauindex) >> 20 & 1 == 1)
 	{
-		plotFill("tauPt_2016VVLoose_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2016VVLoose_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2016VVLoose_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2016VVLoose_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
-
+		make_plot("2016VVLoose", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_IDbits->at(tauindex) >> 21 & 1 == 1)
 	{
-		plotFill("tauPt_2016VLoose_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2016VLoose_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2016VLoose_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2016VLoose_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("2016VLoose", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 
 	if (tau_IDbits->at(tauindex) >> 22 & 1 == 1)
 	{
-		plotFill("tauPt_2016Loose_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2016Loose_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2016Loose_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2016Loose_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("2016Loose", hnumber, tau1P4, tau2P4, tauindex, event_weight);;
 	}
 	if (tau_IDbits->at(tauindex) >> 23 & 1 == 1)
 	{
-		plotFill("tauPt_2016Medium_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2016Medium_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2016Medium_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2016Medium_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
-
+		make_plot("2016Medium", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_IDbits->at(tauindex) >> 24 & 1 == 1)
 	{
-		plotFill("tauPt_2016Tight_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2016Tight_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2016Tight_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2016Tight_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
-
+		make_plot("2016Tight", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_IDbits->at(tauindex) >> 25 & 1 == 1)
 	{
-		plotFill("tauPt_2016VTight_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2016VTight_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2016VTight_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2016VTight_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("2016VTight", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (tau_IDbits->at(tauindex) >> 26 & 1 == 1)
 	{
-		plotFill("tauPt_2016VVTight_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_2016VVTight_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_2016VVTight_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_2016VVTight_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+		make_plot("2016VVTight", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 }
 
-void tautau_analyzer::plot_boosted_taus(TLorentzVector muP4, TLorentzVector tauP4, int tauindex, string hnumber, double event_weight)
+void tautau_analyzer::plot_boosted_taus(TLorentzVector tau1P4, TLorentzVector tau2P4, int tauindex, string hnumber, double event_weight)
 {
 
-	double gentauPt = max( gentau1.Pt(), gentau2.Pt() );
-	double gensubleadingtauPt = min( gentau1.Pt(), gentau2.Pt() );
-	double gentau_deltaR = gentau1.DeltaR(gentau2);
-	double gentau_higgsPt = (gentau1 + gentau2).Pt();
-	plotFill("gentauPt_raw_"+hnumber, gentauPt, 970, 30, 1000, event_weight);
-	plotFill("gensubleadingtauPt_raw_"+hnumber, gensubleadingtauPt, 970, 30, 1000, event_weight);
-	plotFill("genHiggsPt_raw_"+hnumber, gentau_higgsPt, 970, 30, 1000, event_weight);
-	plotFill("gendeltaR_raw_"+hnumber, gentau_deltaR, 600, 0, 6, event_weight);
-
-	double tauPt = muP4.Pt();
-	double subleadingtauPt = tauP4.Pt();
-	double deltaR = muP4.DeltaR(tauP4);
-	double higgsPt = (muP4 + tauP4).Pt();
-
-	// cout<<__LINE__<<endl;
-	plotFill("tauPt_boostedraw_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-	plotFill("subleadingtauPt_boostedraw_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-	plotFill("deltaR_boostedraw_" + hnumber, deltaR, 600, 0, 6, event_weight);
-	plotFill("HiggsPt_boostedraw_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+	make_plot("boostedraw", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	// cout<<__LINE__<<endl;
 	if (boostedTauByVLooseIsolationMVArun2v1DBoldDMwLTNew->at(tauindex) == 1)
 	{
-		plotFill("tauPt_boostedVLoose_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_boostedVLoose_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_boostedVLoose_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_boostedVLoose_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+	make_plot("boostedVLoose", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	// cout<<__LINE__<<endl;
 	if (boostedTauByLooseIsolationMVArun2v1DBoldDMwLTNew->at(tauindex) == 1)
 	{
-		plotFill("tauPt_boostedLoose_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_boostedLoose_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_boostedLoose_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_boostedLoose_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
-
+	make_plot("boostedLoose", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	// cout<<__LINE__<<endl;
 	if (boostedTauByMediumIsolationMVArun2v1DBoldDMwLTNew->at(tauindex) == 1)
 	{
-		plotFill("tauPt_boostedMedium_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_boostedMedium_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_boostedMedium_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_boostedMedium_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
-
+	make_plot("boostedMedium", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (boostedTauByTightIsolationMVArun2v1DBoldDMwLTNew->at(tauindex) == 1)
 	{
-		plotFill("tauPt_boostedTight_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_boostedTight_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_boostedTight_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_boostedTight_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
-
+	make_plot("boostedTight", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 	if (boostedTauByVTightIsolationMVArun2v1DBoldDMwLTNew->at(tauindex) == 1)
 	{
-		plotFill("tauPt_boostedVTight_" + hnumber, tauPt, 970, 30, 1000, event_weight);
-		plotFill("subleadingtauPt_boostedVTight_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
-		plotFill("deltaR_boostedVTight_" + hnumber, deltaR, 600, 0, 6, event_weight);
-		plotFill("HiggsPt_boostedVTight_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
-
+	make_plot("boostedVTight", hnumber, tau1P4, tau2P4, tauindex, event_weight);
 	}
 }
 
@@ -475,26 +357,29 @@ pair<int, int> tautau_analyzer::get_index()
         double higgspt = (tau1_p4 + tau2_p4).Pt();
         
         double dr_aa = tau1_p4.DeltaR(gentau1);
-			  double dr_ab = tau1_p4.DeltaR(gentau2);
-			  double dr_ba = tau2_p4.DeltaR(gentau1);
-			  double dr_bb = tau2_p4.DeltaR(gentau2);
+		double dr_ab = tau1_p4.DeltaR(gentau2);
+		double dr_ba = tau2_p4.DeltaR(gentau1);
+		double dr_bb = tau2_p4.DeltaR(gentau2);
 
         bool pass3rdLeptonVeto = ( eVetoZTTp001dxyz(iTau1, iTau2) && mVetoZTTp001dxyz(iTau1, iTau2) );
         if (   tau1_p4.Pt() > 40 && tau2_p4.Pt() > 40
-				&& abs(tau1_p4.Eta()) < 2.3 && abs(tau2_p4.Eta()) < 2.3
-				&& tau_Charge->at(iTau1) * tau_Charge->at(iTau2) < 0 
-            // && tau_byMediumDeepTau2017v2p1VSjet->at(iTau1) == 1
-            // && tau_byMediumDeepTau2017v2p1VSjet->at(iTau2) == 1
-            && tau_DecayMode->at(iTau1) >= 0
-            && tau_DecayMode->at(iTau2) >= 0
-            && (tau_byVVVLooseDeepTau2017v2p1VSe->at(iTau1) == 1 && tau_byVLooseDeepTau2017v2p1VSmu->at(iTau1) == 1)
-            && (tau_byVVVLooseDeepTau2017v2p1VSe->at(iTau2) == 1 && tau_byVLooseDeepTau2017v2p1VSmu->at(iTau2) == 1)
-            && (tau_IDbits->at(iTau1) >> 1 & 1 == 1)
-            && (tau_IDbits->at(iTau2) >> 1 & 1 == 1)
-            // && (TriggerSelection(tau1_p4, tau2_p4) == true )
-		        // && (thirdLeptonVeto(iTau1, iTau2))
-            && ( dr_aa < 0.1 ||  dr_ab < 0.1 ||  dr_ba < 0.1 ||  dr_bb < 0.1)
-            // && (tau_tau_dr > 0.5)
+	       && abs(tau1_p4.Eta()) < 2.3 && abs(tau2_p4.Eta()) < 2.3
+	       && tau_Charge->at(iTau1) * tau_Charge->at(iTau2) < 0 
+	       && tau_LeadChargedHadron_dz->at(iTau1) < 0.2
+	       && tau_LeadChargedHadron_dz->at(iTau2) < 0.2
+	       // && tau_byMediumDeepTau2017v2p1VSjet->at(iTau1) == 1
+	       // && tau_byMediumDeepTau2017v2p1VSjet->at(iTau2) == 1
+	       && tau_DecayMode->at(iTau1) >= 0
+	       && tau_DecayMode->at(iTau2) >= 0
+	       // && (tau_byVVVLooseDeepTau2017v2p1VSe->at(iTau1) == 1 && tau_byVLooseDeepTau2017v2p1VSmu->at(iTau1) == 1)
+	       // && (tau_byVVVLooseDeepTau2017v2p1VSe->at(iTau2) == 1 && tau_byVLooseDeepTau2017v2p1VSmu->at(iTau2) == 1)
+	       && (tau_IDbits->at(iTau1) >> 1 & 1 == 1)
+	       && (tau_IDbits->at(iTau2) >> 1 & 1 == 1)
+	       // && (TriggerSelection(tau1_p4, tau2_p4) == true )
+	       // && (thirdLeptonVeto(iTau1, iTau2))
+	       //&& ( (dr_aa < 0.1 && dr_bb < 0.1) ||  ( dr_ab < 0.1 &&  dr_ba < 0.1) )
+	    	&& ( dr_aa < 0.1 || dr_ab < 0.1 || dr_ba < 0.1 || dr_bb < 0.1 )
+	       // && (tau_tau_dr > 0.5)
         )
         {
           return make_pair(iTau1, iTau2);
@@ -531,22 +416,25 @@ pair<int, int> tautau_analyzer::get_index_2()
         double higgspt = (tau1_p4 + tau2_p4).Pt();
 
         double dr_aa = tau1_p4.DeltaR(gentau1);
-			  double dr_ab = tau1_p4.DeltaR(gentau2);
-			  double dr_ba = tau2_p4.DeltaR(gentau1);
-			  double dr_bb = tau2_p4.DeltaR(gentau2);
+		double dr_ab = tau1_p4.DeltaR(gentau2);
+		double dr_ba = tau2_p4.DeltaR(gentau1);
+		double dr_bb = tau2_p4.DeltaR(gentau2);
 
         //bool pass3rdLeptonVeto = ( eVetoZTTp001dxyz(iTau1, iTau2) && mVetoZTTp001dxyz(iTau1, iTau2) );
         if ( tau1_p4.Pt() > 40 && tau2_p4.Pt() > 40
-				&& abs(tau1_p4.Eta()) < 2.3 && abs(tau2_p4.Eta()) < 2.3  
-				&& boostedTauCharge->at(iTau1) * boostedTauCharge->at(iTau2) < 0 
-              && boostedTaupfTausDiscriminationByDecayModeFindingNewDMs->at(iTau1) > 0.5
-              && boostedTaupfTausDiscriminationByDecayModeFindingNewDMs->at(iTau2) > 0.5
-              && boostedTauByLooseMuonRejection3->at(iTau1) > 0.5
-              && boostedTauByLooseMuonRejection3->at(iTau2) > 0.5
-              && boostedTauDecayMode->at(iTau1) >= 0
-              && boostedTauDecayMode->at(iTau2) >= 0
-              // && tau_tau_dr < 0.5 
-              && ( dr_aa < 0.1 ||  dr_ab < 0.1 ||  dr_ba < 0.1 ||  dr_bb < 0.1)
+	     && abs(tau1_p4.Eta()) < 2.3 && abs(tau2_p4.Eta()) < 2.3  
+	     && boostedTauZImpact->at(iTau1) < 0.2
+	     && boostedTauZImpact->at(iTau2) < 0.2
+	     && boostedTauCharge->at(iTau1) * boostedTauCharge->at(iTau2) < 0 
+	     && boostedTaupfTausDiscriminationByDecayModeFindingNewDMs->at(iTau1) > 0.5
+	     && boostedTaupfTausDiscriminationByDecayModeFindingNewDMs->at(iTau2) > 0.5
+	     // && boostedTauByLooseMuonRejection3->at(iTau1) > 0.5
+	     // && boostedTauByLooseMuonRejection3->at(iTau2) > 0.5
+	     && boostedTauDecayMode->at(iTau1) >= 0
+	     && boostedTauDecayMode->at(iTau2) >= 0
+	     // && tau_tau_dr < 0.5 
+	     // && ( (dr_aa < 0.1 && dr_bb < 0.1) ||  ( dr_ab < 0.1 &&  dr_ba < 0.1) )
+	     && ( dr_aa < 0.1 || dr_ab < 0.1 || dr_ba < 0.1 || dr_bb < 0.1 )          
             )
         {
           return make_pair(iTau1, iTau2);
@@ -557,3 +445,29 @@ pair<int, int> tautau_analyzer::get_index_2()
 
   return make_pair(-1, -1);
 }
+
+
+void tautau_analyzer::make_plot(string idtype, string hnumber, TLorentzVector tau1P4, TLorentzVector tau2P4, int tauindex, double event_weight){
+
+	double gentauPt = max( gentau1.Pt(), gentau2.Pt() );
+	double gensubleadingtauPt = min( gentau1.Pt(), gentau2.Pt() );
+	double gentau_deltaR = gentau1.DeltaR(gentau2);
+	double gentau_higgsPt = (gentau1 + gentau2).Pt();
+
+	double tauPt = tau1P4.Pt();
+	double subleadingtauPt = tau2P4.Pt();
+	double deltaR = tau1P4.DeltaR(tau2P4);
+	double higgsPt = (tau1P4 + tau2P4).Pt();
+
+	plotFill("tauPt_"+ idtype + "_" + hnumber, tauPt, 970, 30, 1000, event_weight);
+	plotFill("subleadingtauPt_"+ idtype + "_" + hnumber, subleadingtauPt, 970, 30, 1000, event_weight);
+	plotFill("deltaR_"+ idtype + "_" + hnumber, deltaR, 600, 0, 6, event_weight);
+	plotFill("HiggsPt_"+ idtype + "_" + hnumber, higgsPt, 970, 30, 1000, event_weight);
+
+	plotFill("gentauPt_"+ idtype + "_" + hnumber, gentauPt, 970, 30, 1000, event_weight);
+	plotFill("gensubleadingtauPt_"+ idtype + "_" + hnumber, gensubleadingtauPt, 970, 30, 1000, event_weight);
+	plotFill("genHiggsPt_"+ idtype + "_" + hnumber, gentau_higgsPt, 970, 30, 1000, event_weight);
+	plotFill("gendeltaR_"+ idtype + "_" + hnumber, gentau_deltaR, 600, 0, 6, event_weight);
+
+}
+
