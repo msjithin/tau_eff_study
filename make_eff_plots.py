@@ -4,6 +4,7 @@ from ROOT import gROOT
 from math import sin
 from array import array
 from itertools import product
+from xsec_mapping import xsec_map
 
 R.gStyle.SetFrameLineWidth(1)
 R.gStyle.SetLineWidth(2)
@@ -61,25 +62,31 @@ idtypes = { 'deep' : ['VVVLoose', 'Loose', 'Medium', 'Tight', 'VVTight'] ,
 new_binning = array('d', [30, 50, 70, 90, 110, 130, 150, 170, 190, 210, 230, 250, 270, 300, 350, 400, 450,  500, 600, 700,800,900, 1000])
 
 
+nevent_map = {'MZp_1000_MChi_1' :10428000  , 'MZp_100_MChi_1':10708000, 'MZp_1500_MChi_1':10625000, 'DYJetsToLL': 2.4477}
 parameters = list(product(vars, selections, idtypes))
 
 for idx in mzp_map:
-	mzp_idx = idx
-	file_name = 'output/Zpbaryonic2017_'+mzp_idx+'.root'
-	if idx=='DY':
-		file_name = 'output/DYJetsToLL_M-50_TuneCP5.root'
-	infile = R.TFile(file_name, 'update')
-
 	for var, selection, idtype in parameters:
+		mzp_idx = idx
+		file_name = 'output/Zpbaryonic2017_'+mzp_idx+'.root'
+		if idx=='DY':
+			file_name = 'output/DYJetsToLL_M-50_TuneCP5.root'
+		infile = R.TFile(file_name, 'r')
 		signal = mzp_map[mzp_idx]
 
 		raw_name = ''
 		
 		if idtype == 'boosted':
-			raw_name = var+'_boostedraw_'+'6'
+			raw_name = var+'_boostedraw_'+'4'
 		else:
-			raw_name = var+'_raw_'+'6'
+			raw_name = var+'_raw_'+'4'		
+		
+		# if idtype == 'boosted':
+		# 	raw_name = 'gen'+var+'_boostedraw_'+ selection
+		# else:
+		# 	raw_name = 'gen'+var+'_raw_'+ selection
 
+		# raw_name = 'gen'+var+'_raw_0'
 		# print raw_name
 		hist_raw = infile.Get(raw_name)
 		idlist = idtypes[idtype]
@@ -90,6 +97,24 @@ for idx in mzp_map:
 		hist_4 = infile.Get(var+'_'+idtype+idlist[3]+'_'+selection)
 		hist_5 = infile.Get(var+'_'+idtype+idlist[4]+'_'+selection)
 
+		weight = 1.0
+		if signal=='DYJetsToLL':
+			weight = nevent_map[signal]
+		else:
+			print signal, xsec_map[signal] , nevent_map[signal] 
+			weight = 41520 *xsec_map[signal] / nevent_map[signal] 
+			print signal,  weight
+		
+		#print signal,  weight
+
+		hist_raw.Scale(weight)
+		hist_1.Scale(weight)
+		hist_2.Scale(weight)
+		hist_3.Scale(weight)
+		hist_4.Scale(weight)
+		hist_5.Scale(weight)
+
+		#print hist_raw.Integral(), hist_1.Integral()
 
 		if var != 'deltaR':
 			tmpHist_num1 = hist_1.Rebin(22, var+'_'+idtype+idlist[0]+'_'+selection, new_binning)
