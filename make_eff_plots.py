@@ -82,9 +82,9 @@ for idx in mzp_map:
 		# 	raw_name = var+'_raw_'+'4'		
 		
 		if idtype == 'boosted':
-			raw_name = 'gen'+var+'_boostedraw_'+ selection
+			raw_name = 'gen'+var+'_boostedraw_'+ '4'
 		else:
-			raw_name = 'gen'+var+'_raw_'+ selection
+			raw_name = 'gen'+var+'_raw_'+ '4'
 
 		# raw_name = 'gen'+var+'_raw_0'
 		# print raw_name
