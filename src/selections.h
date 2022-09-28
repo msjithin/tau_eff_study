@@ -64,7 +64,7 @@ void mutau_analyzer::selections(float weight, int shift, string uncObject)
 	double gensubleadingtauPt = min( gentau1.Pt(), gentau2.Pt() );
 	double gentau_deltaR = gentau1.DeltaR(gentau2);
 	double gentau_higgsPt = (gentau1 + gentau2).Pt();
-	if( gentau1.Pt()>40 && gentau2.Pt()>40  && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
+	if( gentau1.Pt()>20 && gentau2.Pt()>20  && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
 	{
 		plotFill("gentauPt_raw_0", gentauPt, 970, 30, 1000, event_weight);
 		plotFill("gensubleadingtauPt_raw_0", gensubleadingtauPt, 970, 30, 1000, event_weight);
@@ -93,7 +93,7 @@ void mutau_analyzer::selections(float weight, int shift, string uncObject)
 		tau_index = selected_indices.second;
 		if (mu_index >= 0 && tau_index >= 0)
 		{
-			if( gentau1.Pt()>40 && gentau2.Pt()>40  && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
+			if( gentau1.Pt()>20 && gentau2.Pt()>20  && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
 			{
 				plotFill("gentauPt_raw_1", gentauPt, 970, 30, 1000, event_weight);
 				plotFill("gensubleadingtauPt_raw_1", gensubleadingtauPt, 970, 30, 1000, event_weight);
@@ -184,7 +184,7 @@ void mutau_analyzer::selections(float weight, int shift, string uncObject)
 		if (mu_index >= 0 && tau_index >= 0)
 		{
 			// cout << __LINE__ << endl;
-			if( gentau1.Pt()>40 && gentau2.Pt()>40  && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
+			if( gentau1.Pt()>20 && gentau2.Pt()>20  && abs(gentau1.Eta())<2.3 && abs(gentau2.Eta())<2.3 )
 			{
 				plotFill("gentauPt_boostedraw_1", gentauPt, 970, 30, 1000, event_weight);
 				plotFill("gensubleadingtauPt_boostedraw_1", gensubleadingtauPt, 970, 30, 1000, event_weight);
